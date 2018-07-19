@@ -15,6 +15,7 @@ void SystemRun::run(){
     this->CommandPro->start(this->Command);
     this->CommandPro->waitForStarted();
     this->CommandPro->waitForFinished();
+    emit updateLog("Ok.");
 }
 
 int SystemRun::SetCommand(QString cmd)

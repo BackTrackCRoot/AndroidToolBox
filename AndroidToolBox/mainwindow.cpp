@@ -85,7 +85,7 @@ void MainWindow::trigerMenu(QAction* act)
     }
     else if(act->text() == "ARM转机器码")
     {
-        QMessageBox::information(NULL, "提示", "开发ing", QMessageBox::Ok);
+        QMessageBox::information(this, "提示", "开发ing", QMessageBox::Ok);
         return;
     }
     else if(act->text() == "打开JADX")
@@ -111,5 +111,24 @@ void MainWindow::trigerMenu(QAction* act)
     {
         QString URL = "https://github.com/BackTrackCRoot/AndroidToolBox";
         QDesktopServices::openUrl(QUrl(URL.toLatin1()));
+    }
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    QFileInfo apkinfo(this->dFile);
+    if(apkinfo.isDir())
+    {
+        QUrl saveFilePath = QFileDialog::getSaveFileUrl(this,"保存APK文件",QUrl("."),"APK Files(*.apk)");
+        if(saveFilePath.isEmpty())
+            return;
+        SystemRun *BuildApk = new SystemRun(this);
+        connect(BuildApk,SIGNAL(updateLog(QString)),this,SLOT(on_updateLog(QString)));
+        BuildApk->SetCommand("java -jar .\\tool\\apktool.jar -o " + saveFilePath.toLocalFile() + " b " + this->dFile);
+        BuildApk->start();
+    }
+    else
+    {
+        QMessageBox::information(this,"提示","不是有效目录",QMessageBox::Ok);
     }
 }
